@@ -4,14 +4,13 @@ import Base from 'ember-simple-auth/authenticators/base';
 export default Base.extend({
   ajax: Ember.inject.service(),
 
-  authenticate(username, password) {
+  authenticate(accesstoken) {
     return new Ember.RSVP.Promise((resolve, reject) => {
-      console.log("Credential Authentication: " + username + " - " + password);
+      console.log("Verifying FB Access Token: " + accesstoken);
 
-      this.get("ajax").post("http://localhost:3000/credentials/login", {
+      this.get("ajax").post("http://localhost:3000/implicitgrant/facebook", {
         data: {
-          username: username,
-          password: password
+          accesstoken: accesstoken
         }
       }).then((data) => {
         console.log("AJAX SUCCESS: " + data);

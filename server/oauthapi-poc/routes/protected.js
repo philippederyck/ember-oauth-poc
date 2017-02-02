@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
         try {
             let jwtToken = jwt.verify(rawToken, "SuperSecret");
             console.log("Verified JWT Token for " + jwtToken.username);
-            res.status(200).send("Access granted to " + jwtToken.username);
+            res.status(200).send({message: "Access granted to " + jwtToken.username});
         }
         catch(e) {
             console.error("Failed to verify JWT Token");

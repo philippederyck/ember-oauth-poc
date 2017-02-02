@@ -2,7 +2,9 @@
 
 {{#if session.isAuthenticated}}
   You are authenticated!
-  {{session.data.authenticated.payload.username}}
+
+  {{message}}
+  <button {{action "fetchData"}}>Fetch Data</button>
 {{else}}
   You are not authenticated :(
 {{/if}}
