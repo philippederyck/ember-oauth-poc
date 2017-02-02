@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var jwt = require('jwt-express');
+var jwt = require('jsonwebtoken');
 
 router.get('/', function(req, res, next) {
     res.send("Authentication with username / password");
@@ -15,9 +15,14 @@ router.post('/login', function(req, res) {
     //Simply check we have both username and password
     if(username && password) {
         console.log("Credentials: valid username and password, generating token");
-        //TODO implement
+
+        let payload = {
+            username: username
+        }
+
         let data = {
-            jwt: jwt.create("SuperSecret", {username: username})
+            payload: payload,
+            jwt: jwt.sign(payload, "SuperSecret")
         }
         res.status(200).send(data);
     }

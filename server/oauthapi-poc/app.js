@@ -6,6 +6,7 @@ var cors = require('cors');
 
 var index = require('./routes/index');
 var credentials = require('./routes/credentials');
+var protected = require('./routes/protected');
 
 
 var app = express();
@@ -19,5 +20,6 @@ app.use(cors());
 
 app.use('/', index);
 app.use('/credentials', credentials);
+app.use('/protected', protected);
 
 module.exports = app;
