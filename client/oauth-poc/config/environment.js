@@ -29,6 +29,11 @@ module.exports = function(environment) {
           appId: "1850441521898312",
           scope: "email",
           returnScopes: true
+        },
+        "facebook-oauth2": {
+          apiKey: "1850441521898312",
+          scope: "email",
+          returnScopes: true
         }
       }
     }

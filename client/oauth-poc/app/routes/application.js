@@ -28,9 +28,23 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       let self = this;
       this.get("torii").open("facebook-connect").then((data) => {
         //Data contains the UID and accessToken.
-        console.log("FB Auth succeeded, forwarding to backend");
+        console.log("FB Auth succeeded, forwarding access token to backend");
         console.log(data);
         self.get("session").authenticate("authenticator:accesstoken-facebook", data.accessToken).then(() => {
+          console.log("Authentication succeeded");
+        }).catch(() => {
+          console.error("Authentication failed");
+        });
+      });
+    },
+
+    loginExplicitGrant() {
+      let self = this;
+      this.get("torii").open("facebook-oauth2").then((data) => {
+        //Data contains the UID and accessToken.
+        console.log("FB Auth succeeded, forwarding authorization code to backend");
+        console.log(data);
+        self.get("session").authenticate("authenticator:authorizationcode-facebook", data.authorizationCode).then(() => {
           console.log("Authentication succeeded");
         }).catch(() => {
           console.error("Authentication failed");

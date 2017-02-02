@@ -21,7 +21,7 @@ router.post('/facebook', function(req, res) {
                let tokenStatus = JSON.parse(body);
                if(tokenStatus.data && tokenStatus.data.app_id === appId) {
                    // The token was issued for our app, fetch some user data with this
-                   let userUrl = "https://graph.facebook.com/v2.8/" + tokenStatus.data.user_id + "?access_token=" + accesstoken;
+                   let userUrl = "https://graph.facebook.com/v2.8/me?access_token=" + accesstoken;
                    request(userUrl, function(error, response, body) {
                        if(!error && response.statusCode === 200) {
                            console.log("Retrieved user data from Facebook");
