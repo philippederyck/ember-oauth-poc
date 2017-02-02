@@ -18,6 +18,7 @@ router.post('/facebook', function(req, res) {
     if(authcode) {
         //Check whether it's a token for our app
         let url = "https://graph.facebook.com/oauth/access_token?grant_type=authorization_code&redirect_uri=" + appUri + "&client_id=" + appId + "&client_secret=" + appSecret + "&code=" + authcode;
+        console.log(url);
         request(url, function(error, response, body) {
             if(!error && response.statusCode === 200) {
                 //Not a JSON response for some reason
