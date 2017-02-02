@@ -1,3 +1,8 @@
 <h2>Protected Resource</h2>
 
-{{outlet}}
+{{#if session.isAuthenticated}}
+  You are authenticated!
+  {{session.data.authenticated.payload.username}}
+{{else}}
+  You are not authenticated :(
+{{/if}}
