@@ -1,42 +1,46 @@
 import Ember from 'ember';
-import Base from 'ember-simple-auth/authenticators/base';
+import Torii from 'ember-simple-auth/authenticators/torii';
 
-export default Base.extend({
-  ajax: Ember.inject.service(),
+export default Torii.extend({
+  torii: Ember.inject.service(),
+  ajax:  Ember.inject.service(),
 
-  authenticate(authcode) {
-    return new Ember.RSVP.Promise((resolve, reject) => {
-      console.log("Verifying FB Authorization code: " + authcode);
+  authenticate(provider) {
+    return this._super(...arguments)
+      .then((data) => {
+        let { authorizationCode } = data;
+        console.log("Verifying FB Authorization code: " + authorizationCode);
 
-      this.get("ajax").post("http://localhost:3000/explicitgrant/facebook", {
-        data: {
-          authorizationcode: authcode
-        }
-      }).then((data) => {
-        console.log("AJAX SUCCESS: " + data);
-        if(data.jwt && data.jwt) {
-          console.log("Valid JWT token received");
-          console.log(data.jwt);
-          resolve(data);
-        }
-        else {
-          console.error("Invalid JWT token received");
-          console.log(data.jwt);
-          reject("Invalid token");
-        }
-      }).catch((error) => {
-        console.error("AJAX ERROR: " + error);
-        //TODO distinguish between error messages
-        reject("Authentication failed: " + error);
+        return this.get("ajax").post("http://localhost:3000/explicitgrant/facebook", {
+          data: {
+            authorizationcode: authorizationCode
+          }
+        }).then((data) => {
+          console.log("AJAX SUCCESS: ", data);
+          if(data.jwt && data.jwt) {
+            console.log("Valid JWT token received");
+            console.log(data.jwt);
+            data.provider = provider;
+            return data;
+          }
+          else {
+            console.error("Invalid JWT token received");
+            console.log(data.jwt);
+            throw new Error("Invalid token");
+          }
+        }).catch((error) => {
+          console.error("AJAX ERROR: " + error);
+          //TODO distinguish between error messages
+          throw new Error("Authentication failed: " + error);
+        });
       });
-    });
   },
 
-  restore(data) {
-    //TODO implement
-  },
+  // restore(data) {
+  //   //TODO implement
+  // },
 
-  invalidate(data) {
-    //TODO implement
-  }
+  // invalidate(data) {
+  //   //TODO implement
+  // }
 });

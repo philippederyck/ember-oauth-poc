@@ -3,6 +3,7 @@ import ApplicationRouteMixin from 'ember-simple-auth/mixins/application-route-mi
 
 export default Ember.Route.extend(ApplicationRouteMixin, {
   torii: Ember.inject.service(),
+  ajax: Ember.inject.service(),
 
   actions: {
     invalidateSession() {
@@ -25,12 +26,11 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
       // })
 
       // METHOD 3
-      let self = this;
       this.get("torii").open("facebook-connect").then((data) => {
         //Data contains the UID and accessToken.
         console.log("FB Auth succeeded, forwarding access token to backend");
         console.log(data);
-        self.get("session").authenticate("authenticator:accesstoken-facebook", data.accessToken).then(() => {
+        this.get("session").authenticate("authenticator:accesstoken-facebook", data.accessToken).then(() => {
           console.log("Authentication succeeded");
         }).catch(() => {
           console.error("Authentication failed");
@@ -39,17 +39,7 @@ export default Ember.Route.extend(ApplicationRouteMixin, {
     },
 
     loginExplicitGrant() {
-      let self = this;
-      this.get("torii").open("facebook-oauth2").then((data) => {
-        //Data contains the UID and accessToken.
-        console.log("FB Auth succeeded, forwarding authorization code to backend");
-        console.log(data);
-        self.get("session").authenticate("authenticator:authorizationcode-facebook", data.authorizationCode).then(() => {
-          console.log("Authentication succeeded");
-        }).catch(() => {
-          console.error("Authentication failed");
-        });
-      });
+      return this.get("session").authenticate("authenticator:authorizationcode-facebook", 'facebook-oauth2');
     }
   }
 });
